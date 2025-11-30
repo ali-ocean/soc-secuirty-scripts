@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}View Report - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Security Report Details</h1>
+        <div class="page-actions">
+            <a href="{{ url_for('reports') }}" class="btn btn-secondary">Back to Reports</a>
+            {% if report.html_report %}
+            <a href="{{ url_for('download_report', report_id=report.id) }}" class="btn btn-primary">Download PDF</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="report-info">
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Host</label>
+                <div>{{ report.hosts.hostname }} ({{ report.hosts.ip_address }})</div>
+            </div>
+            <div class="info-item">
+                <label>Scan Type</label>
+                <div><span class="badge badge-info">{{ report.scan_type }}</span></div>
+            </div>
+            <div class="info-item">
+                <label>Status</label>
+                <div><span class="badge badge-{{ 'success' if report.status == 'completed' else 'warning' if report.status == 'running' else 'error' if report.status == 'failed' else 'secondary' }}">{{ report.status }}</span></div>
+            </div>
+            <div class="info-item">
+                <label>Score</label>
+                <div>
+                    {% if report.score is not none %}
+                        <span class="score score-{{ 'high' if report.score >= 80 else 'medium' if report.score >= 60 else 'low' }}">{{ report.score }}%</span>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info-item">
+                <label>Checks</label>
+                <div>{{ report.passed_checks or 0 }} passed / {{ report.total_checks or 0 }} total</div>
+            </div>
+            <div class="info-item">
+                <label>Date</label>
+                <div>{{ report.created_at }}</div>
+            </div>
+        </div>
+    </div>
+
+    {% if report.error_message %}
+    <div class="card">
+        <div class="card-header">
+            <h2>Error Details</h2>
+        </div>
+        <div class="card-body">
+            <pre class="error-output">{{ report.error_message }}</pre>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if report.html_report %}
+    <div class="card">
+        <div class="card-header">
+            <h2>Report Output</h2>
+        </div>
+        <div class="card-body">
+            <div class="report-content">
+                {{ report.html_report | safe }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if report.scan_output %}
+    <div class="card">
+        <div class="card-header">
+            <h2>Scan Output</h2>
+        </div>
+        <div class="card-body">
+            <pre class="scan-output">{{ report.scan_output }}</pre>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

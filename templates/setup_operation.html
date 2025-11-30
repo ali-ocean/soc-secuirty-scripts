@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Setup Operation - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Setup Security Hardening</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('setup_operation') }}">
+                <div class="form-group">
+                    <label for="operation_type">Hardening Type</label>
+                    <select id="operation_type" name="operation_type" required>
+                        <option value="vm_hardening">VM Hardening (SSH, Firewall, IDS)</option>
+                        <option value="nginx_hardening">Nginx Hardening (WAF, Headers, SSL)</option>
+                        <option value="both">Full Stack Hardening (VM + Nginx)</option>
+                    </select>
+                    <small>Select the security hardening operation to perform</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Hosts</label>
+                    {% if hosts %}
+                    <div class="checkbox-list">
+                        {% for host in hosts %}
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="host_ids" value="{{ host.id }}">
+                            <span>{{ host.hostname }} ({{ host.ip_address }})</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="empty-state">No active hosts available. Please add hosts first.</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" {% if not hosts %}disabled{% endif %}>Start Setup</button>
+                    <a href="{{ url_for('operations') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Operation Details</h2>
+        </div>
+        <div class="card-body">
+            <div class="operation-details">
+                <h3>VM Hardening</h3>
+                <ul>
+                    <li>SSH hardening (port 9977, key-only auth, root login disabled)</li>
+                    <li>UFW firewall configuration</li>
+                    <li>Fail2ban intrusion prevention</li>
+                    <li>CrowdSec threat intelligence</li>
+                    <li>AIDE file integrity monitoring</li>
+                    <li>Kernel hardening (sysctl)</li>
+                    <li>ClamAV + Maldet malware detection</li>
+                    <li>Automatic security updates</li>
+                </ul>
+
+                <h3>Nginx Hardening</h3>
+                <ul>
+                    <li>ModSecurity v3 Web Application Firewall</li>
+                    <li>OWASP Core Rule Set (CRS)</li>
+                    <li>Security headers (HSTS, CSP, X-Frame-Options)</li>
+                    <li>SSL/TLS hardening (TLS 1.2+, strong ciphers)</li>
+                    <li>Rate limiting protection</li>
+                    <li>Server token hiding</li>
+                </ul>
+
+                <p class="warning-text"><strong>Note:</strong> These operations will modify system configurations. Ensure you have SSH key access before running VM hardening, as password authentication will be disabled.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

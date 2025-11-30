@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Security Reports - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Security Reports</h1>
+        <div class="page-actions">
+            {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('run_scan') }}" class="btn btn-primary">Run New Scan</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <form method="GET" action="{{ url_for('reports') }}" class="search-form">
+                <input type="text" name="search" placeholder="Search hostname..." value="{{ search }}">
+                <select name="scan_type">
+                    <option value="">All Types</option>
+                    <option value="security" {{ 'selected' if scan_type == 'security' else '' }}>Security Scan</option>
+                    <option value="vm_attack" {{ 'selected' if scan_type == 'vm_attack' else '' }}>VM Attack Test</option>
+                    <option value="nginx_attack" {{ 'selected' if scan_type == 'nginx_attack' else '' }}>Nginx Attack Test</option>
+                </select>
+                <select name="status">
+                    <option value="">All Status</option>
+                    <option value="completed" {{ 'selected' if status == 'completed' else '' }}>Completed</option>
+                    <option value="running" {{ 'selected' if status == 'running' else '' }}>Running</option>
+                    <option value="pending" {{ 'selected' if status == 'pending' else '' }}>Pending</option>
+                    <option value="failed" {{ 'selected' if status == 'failed' else '' }}>Failed</option>
+                </select>
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </form>
+        </div>
+        <div class="card-body">
+            {% if reports %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Host</th>
+                        <th>IP Address</th>
+                        <th>Scan Type</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th>Passed/Total</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td><strong>{{ report.hosts.hostname }}</strong></td>
+                        <td>{{ report.hosts.ip_address }}</td>
+                        <td><span class="badge badge-info">{{ report.scan_type }}</span></td>
+                        <td><span class="badge badge-{{ 'success' if report.status == 'completed' else 'warning' if report.status == 'running' else 'error' if report.status == 'failed' else 'secondary' }}">{{ report.status }}</span></td>
+                        <td>
+                            {% if report.score is not none %}
+                                <span class="score score-{{ 'high' if report.score >= 80 else 'medium' if report.score >= 60 else 'low' }}">{{ report.score }}%</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ report.passed_checks }}/{{ report.total_checks if report.total_checks else 0 }}</td>
+                        <td>{{ report.created_at[:16] }}</td>
+                        <td>
+                            <a href="{{ url_for('view_report', report_id=report.id) }}" class="btn btn-sm btn-secondary">View</a>
+                            {% if report.html_report %}
+                            <a href="{{ url_for('download_report', report_id=report.id) }}" class="btn btn-sm btn-primary">PDF</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-state">No reports found. Try adjusting your search criteria.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

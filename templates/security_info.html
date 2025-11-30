@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Security Information - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Security Tools & Compliance</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>VM Security Tools</h2>
+        </div>
+        <div class="card-body">
+            <div class="tool-section">
+                <h3>SSH Hardening</h3>
+                <p><strong>Functionality:</strong> Secures remote access by changing SSH to port 9977, disabling root login, enforcing key-based authentication, and implementing strong cryptographic algorithms.</p>
+                <p><strong>Compliance:</strong> CIS Benchmark 5.2.1-5.2.9, PCI-DSS 2.3, NIST SP 800-53 AC-17</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>UFW Firewall</h3>
+                <p><strong>Functionality:</strong> Uncomplicated Firewall provides host-based network access control. Configured to deny all incoming traffic by default, with explicit rules for SSH, HTTP, and HTTPS.</p>
+                <p><strong>Compliance:</strong> CIS Benchmark 4.4.1, PCI-DSS 1.1-1.3, NIST SP 800-53 SC-7</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>Fail2ban</h3>
+                <p><strong>Functionality:</strong> Intrusion prevention system that monitors logs and automatically bans IPs showing malicious behavior like repeated authentication failures.</p>
+                <p><strong>Compliance:</strong> CIS Benchmark 5.2.5, PCI-DSS 8.1.6, NIST SP 800-53 AC-7</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>CrowdSec</h3>
+                <p><strong>Functionality:</strong> Collaborative threat intelligence system that detects and blocks attacks using community-driven behavioral detection. Shares threat data across the network.</p>
+                <p><strong>Compliance:</strong> NIST SP 800-53 SI-4, ISO 27001 A.12.6.1</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>AIDE (Advanced Intrusion Detection Environment)</h3>
+                <p><strong>Functionality:</strong> File integrity monitoring system that creates a database of file checksums and detects unauthorized changes to critical system files.</p>
+                <p><strong>Compliance:</strong> CIS Benchmark 6.1.1, PCI-DSS 11.5, NIST SP 800-53 SI-7</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>RKHunter & Chkrootkit</h3>
+                <p><strong>Functionality:</strong> Rootkit detection tools that scan for known rootkits, backdoors, and local exploits by checking system binaries, hidden processes, and suspicious files.</p>
+                <p><strong>Compliance:</strong> PCI-DSS 5.2, NIST SP 800-53 SI-3</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>ClamAV + Maldet</h3>
+                <p><strong>Functionality:</strong> Antivirus and malware detection. ClamAV provides signature-based detection while Maldet focuses on web-based malware in file uploads and websites.</p>
+                <p><strong>Compliance:</strong> PCI-DSS 5.1, NIST SP 800-53 SI-3</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>Kernel Hardening (sysctl)</h3>
+                <p><strong>Functionality:</strong> Applies security-focused kernel parameters including protection against IP spoofing, SYN floods, ICMP redirects, and restricts kernel pointer exposure.</p>
+                <p><strong>Compliance:</strong> CIS Benchmark 3.3.1-3.3.9, NIST SP 800-53 SC-5</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>Unattended Upgrades</h3>
+                <p><strong>Functionality:</strong> Automatically applies security updates and patches to keep the system protected against known vulnerabilities.</p>
+                <p><strong>Compliance:</strong> CIS Benchmark 2.2.4, PCI-DSS 6.2, NIST SP 800-53 SI-2</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Nginx Security Tools</h2>
+        </div>
+        <div class="card-body">
+            <div class="tool-section">
+                <h3>ModSecurity v3 Web Application Firewall</h3>
+                <p><strong>Functionality:</strong> Enterprise-grade WAF that inspects HTTP traffic in real-time, blocking attacks before they reach the application. Provides deep packet inspection and pattern matching.</p>
+                <p><strong>Compliance:</strong> OWASP Top 10, PCI-DSS 6.5-6.6, NIST SP 800-53 SC-7</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>OWASP Core Rule Set (CRS)</h3>
+                <p><strong>Functionality:</strong> Comprehensive set of attack detection rules covering SQL injection, XSS, command injection, directory traversal, remote file inclusion, and other web vulnerabilities.</p>
+                <p><strong>Compliance:</strong> OWASP Top 10 (A01-A10), PCI-DSS 6.5</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>Security Headers</h3>
+                <p><strong>Functionality:</strong> Implements HTTP security headers including HSTS, X-Frame-Options, X-Content-Type-Options, CSP, and Referrer-Policy to protect against clickjacking, XSS, and MIME-type attacks.</p>
+                <p><strong>Compliance:</strong> OWASP A05:2021, PCI-DSS 6.5.7, NIST SP 800-53 SC-8</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>SSL/TLS Hardening</h3>
+                <p><strong>Functionality:</strong> Enforces TLS 1.2+ only, uses strong cipher suites (ECDHE, AES-GCM, ChaCha20), disables weak protocols, and optimizes session management.</p>
+                <p><strong>Compliance:</strong> PCI-DSS 4.1, NIST SP 800-52r2, ISO 27001 A.10.1.1</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>Rate Limiting</h3>
+                <p><strong>Functionality:</strong> Protects against brute-force attacks, DoS attempts, and API abuse by limiting request rates per IP address with burst allowance.</p>
+                <p><strong>Compliance:</strong> NIST SP 800-53 SC-5, OWASP API Security Top 10</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Security Testing</h2>
+        </div>
+        <div class="card-body">
+            <div class="tool-section">
+                <h3>Security Compliance Scanner</h3>
+                <p><strong>Functionality:</strong> Comprehensive audit tool that checks 17+ security controls including SSH configuration, firewall status, IDS/IPS, file integrity, WAF status, security headers, and rate limiting.</p>
+                <p><strong>Standards Covered:</strong> CIS Benchmarks, NIST SP 800-53, PCI-DSS, OWASP</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>VM Attack Simulation</h3>
+                <p><strong>Functionality:</strong> Executes real-world attack scenarios including SSH brute-force, dictionary attacks, port scanning, and SYN floods to validate that defensive controls are working.</p>
+                <p><strong>Purpose:</strong> Penetration testing and control validation</p>
+            </div>
+
+            <div class="tool-section">
+                <h3>Nginx WAF Attack Testing</h3>
+                <p><strong>Functionality:</strong> Attempts 8 different web attacks including SQL injection, XSS, directory traversal, command injection, RFI, and XXE to verify ModSecurity is properly blocking threats.</p>
+                <p><strong>Purpose:</strong> WAF validation against OWASP Top 10</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Compliance Standards</h2>
+        </div>
+        <div class="card-body">
+            <div class="compliance-grid">
+                <div class="compliance-item">
+                    <h3>CIS Benchmarks</h3>
+                    <p>Industry best practices for secure configuration of systems and software. Our scripts implement CIS Ubuntu Linux Benchmark controls for SSH, firewall, system hardening, and file integrity.</p>
+                </div>
+                <div class="compliance-item">
+                    <h3>NIST SP 800-53</h3>
+                    <p>Federal security controls framework. Addresses access control (AC), system protection (SC), system integrity (SI), and identification/authentication (IA) requirements.</p>
+                </div>
+                <div class="compliance-item">
+                    <h3>PCI-DSS</h3>
+                    <p>Payment Card Industry Data Security Standard. Covers firewall configuration, system hardening, malware protection, access control, vulnerability management, and network monitoring.</p>
+                </div>
+                <div class="compliance-item">
+                    <h3>OWASP Top 10</h3>
+                    <p>Most critical web application security risks. Our WAF configuration protects against all OWASP Top 10 threats including injection, XSS, broken authentication, and security misconfigurations.</p>
+                </div>
+                <div class="compliance-item">
+                    <h3>ISO 27001</h3>
+                    <p>International information security management standard. Implements controls for cryptographic controls, network security, access control, and secure communications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

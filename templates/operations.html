@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Operations - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Setup Operations</h1>
+        <div class="page-actions">
+            <a href="{{ url_for('setup_operation') }}" class="btn btn-primary">New Operation</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if operations %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Host</th>
+                        <th>Operation Type</th>
+                        <th>Status</th>
+                        <th>Started</th>
+                        <th>Completed</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for op in operations %}
+                    <tr>
+                        <td><strong>{{ op.hosts.hostname }}</strong><br><small>{{ op.hosts.ip_address }}</small></td>
+                        <td><span class="badge badge-info">{{ op.operation_type }}</span></td>
+                        <td><span class="badge badge-{{ 'success' if op.status == 'completed' else 'warning' if op.status == 'running' else 'error' if op.status == 'failed' else 'secondary' }}">{{ op.status }}</span></td>
+                        <td>{{ op.started_at[:16] if op.started_at else '-' }}</td>
+                        <td>{{ op.completed_at[:16] if op.completed_at else '-' }}</td>
+                        <td>
+                            {% if op.started_at and op.completed_at %}
+                                {% set duration = (op.completed_at | string)[:19] %}
+                                ~{{ ((op.completed_at | string)[:19] | length) }}m
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="viewOperationOutput('{{ op.id }}', '{{ op.output or 'No output available' }}', '{{ op.error_message or '' }}')">View Output</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-state">No operations yet. Start by setting up hardening on your hosts.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div id="outputModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h2>Operation Output</h2>
+        <div id="modalOutput"></div>
+    </div>
+</div>
+
+<script>
+function viewOperationOutput(id, output, error) {
+    const modal = document.getElementById('outputModal');
+    const modalOutput = document.getElementById('modalOutput');
+    let content = '<pre class="operation-output">';
+    if (error) {
+        content += '<div class="error-section"><strong>ERROR:</strong>\n' + error + '\n\n</div>';
+    }
+    content += output + '</pre>';
+    modalOutput.innerHTML = content;
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('outputModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('outputModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

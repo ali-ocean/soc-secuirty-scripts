@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Run Scan - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Run Security Scan</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('run_scan') }}">
+                <div class="form-group">
+                    <label for="scan_type">Scan Type</label>
+                    <select id="scan_type" name="scan_type" required>
+                        <option value="security">Security Compliance Scan</option>
+                        <option value="vm_attack">VM Attack Test</option>
+                        <option value="nginx_attack">Nginx WAF Attack Test</option>
+                    </select>
+                    <small>Select the type of security scan to perform</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Hosts</label>
+                    {% if hosts %}
+                    <div class="checkbox-list">
+                        {% for host in hosts %}
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="host_ids" value="{{ host.id }}">
+                            <span>{{ host.hostname }} ({{ host.ip_address }})</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="empty-state">No active hosts available. Please add hosts first.</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" {% if not hosts %}disabled{% endif %}>Run Scan</button>
+                    <a href="{{ url_for('reports') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Scan Types Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="scan-info">
+                <h3>Security Compliance Scan</h3>
+                <p>Comprehensive security audit checking SSH hardening, firewall status, intrusion detection, file integrity monitoring, and web application firewall configuration. Produces detailed compliance report with CIS, NIST, and OWASP standards.</p>
+
+                <h3>VM Attack Test</h3>
+                <p>Simulates real-world attacks including SSH brute-force, dictionary attacks, port scanning, and SYN floods to verify that security controls are properly blocking malicious activity.</p>
+
+                <h3>Nginx WAF Attack Test</h3>
+                <p>Tests ModSecurity Web Application Firewall by attempting SQL injection, XSS, directory traversal, command injection, and other OWASP Top 10 attacks to ensure proper protection.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

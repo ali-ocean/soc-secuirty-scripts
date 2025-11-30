@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Host - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Edit Host</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('edit_host', host_id=host.id) }}">
+                <div class="form-group">
+                    <label for="hostname">Hostname</label>
+                    <input type="text" id="hostname" name="hostname" value="{{ host.hostname }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="ip_address">IP Address</label>
+                    <input type="text" id="ip_address" name="ip_address" value="{{ host.ip_address }}" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ssh_port">SSH Port</label>
+                        <input type="number" id="ssh_port" name="ssh_port" value="{{ host.ssh_port }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="ssh_user">SSH User</label>
+                        <input type="text" id="ssh_user" name="ssh_user" value="{{ host.ssh_user }}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="active" {{ 'selected' if host.status == 'active' else '' }}>Active</option>
+                        <option value="inactive" {{ 'selected' if host.status == 'inactive' else '' }}>Inactive</option>
+                        <option value="error" {{ 'selected' if host.status == 'error' else '' }}>Error</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3">{{ host.description }}</textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Host</button>
+                    <a href="{{ url_for('hosts') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

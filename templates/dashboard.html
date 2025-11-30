@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Security Dashboard</h1>
+        <div class="page-actions">
+            {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('add_host') }}" class="btn btn-primary">Add Host</a>
+            <a href="{{ url_for('run_scan') }}" class="btn btn-success">Run Scan</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🖥️</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.total_hosts }}</div>
+                <div class="stat-label">Total Hosts</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.active_hosts }}</div>
+                <div class="stat-label">Active Hosts</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.total_scans }}</div>
+                <div class="stat-label">Total Scans</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.failed_scans }}</div>
+                <div class="stat-label">Failed Scans</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Recent Scans</h2>
+        </div>
+        <div class="card-body">
+            {% if recent_scans %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Host</th>
+                        <th>Scan Type</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scan in recent_scans %}
+                    <tr>
+                        <td>{{ scan.hosts.hostname }}</td>
+                        <td><span class="badge badge-info">{{ scan.scan_type }}</span></td>
+                        <td><span class="badge badge-{{ 'success' if scan.status == 'completed' else 'warning' if scan.status == 'running' else 'error' }}">{{ scan.status }}</span></td>
+                        <td>{{ scan.score if scan.score else 'N/A' }}%</td>
+                        <td>{{ scan.created_at[:10] }}</td>
+                        <td>
+                            <a href="{{ url_for('view_report', report_id=scan.id) }}" class="btn btn-sm btn-secondary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-state">No scans yet. Run your first scan to get started!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

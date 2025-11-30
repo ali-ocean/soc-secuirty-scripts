@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>My Profile</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Profile Information</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('update_profile') }}">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ current_user.email }}" disabled>
+                    <small>Email cannot be changed</small>
+                </div>
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" value="{{ current_user.full_name or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" name="role" value="{{ current_user.role }}" disabled>
+                    <small>Role is managed by administrators</small>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Your Permissions</h2>
+        </div>
+        <div class="card-body">
+            <div class="permissions-list">
+                {% if current_user.role == 'admin' %}
+                <div class="permission-badge badge-success">Full Administrative Access</div>
+                <ul>
+                    <li>Manage hosts</li>
+                    <li>Run security operations</li>
+                    <li>View and download all reports</li>
+                    <li>Manage users</li>
+                </ul>
+                {% else %}
+                <div class="permission-badge badge-secondary">View-Only Access</div>
+                <ul>
+                    <li>View hosts</li>
+                    <li>View security reports</li>
+                    <li>Download reports as PDF</li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
